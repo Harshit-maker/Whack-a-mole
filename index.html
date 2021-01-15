@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&family=Russo+One&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title> Whack-a-mole !!</title>
+</head>
+<body>
+	<div class="btn">
+	<h2> Whack-a-Mole !!<span class="score">0</span></h2>
+	<button class="btn" onclick="startGame()"> Start </button>
+	</div>
+	<br>
+	<div class="game">
+		<div class="hole hole1">
+			<div class="mole"></div>
+		</div>
+		<div class="hole hole2">
+			<div class="mole"></div>
+		</div>
+		<div class="hole hole3">
+			<div class="mole"></div>
+		</div>
+		<div class="hole hole4">
+			<div class="mole"></div>
+		</div>
+		<div class="hole hole5">
+			<div class="mole"></div>
+		</div>
+		<div class="hole hole6">
+			<div class="mole"></div>
+		</div>
+	</div>
+
+
+	<script>
+		const holes = document.querySelectorAll('.hole');
+		const scoreBoard = document.querySelector('.score');
+		const moles = document.querySelectorAll('.mole');
+		let lasthole;
+		let timeup=false;
+		let score=0;
+		 function randomTime(min, max){
+		 	return Math.round(Math.random() * (max-min) + min);
+		 }
+
+		 function randomHole(holes)
+		 {
+		 	const idx = Math.floor(Math.random() * holes.length);
+		 	const hole = holes[idx];
+		 	if(hole === lasthole)
+		 	{
+		 		randomHole(holes);
+		 	}
+		 	lasthole = hole;
+		 	return hole;
+
+		 }
+		 function peep() {
+		 	const time = randomTime(200, 1000);
+		 	const hole = randomHole(holes);
+		 	hole.classList.add('up');
+		 	setTimeout(() => {
+		 		hole.classList.remove('up');
+		 		if(!timeup)
+		 			peep();
+		 	}, time);
+		 	
+		 }
+
+		 function startGame(){
+		 	scoreBoard.textContent = 0;
+		 	timeup = false;
+		 	score=0;
+		 	peep();
+		 	setTimeout(() => timeup=true, 10000);
+		 }
+		 function bonk(e)
+		 {
+		 	if(!e.isTrusted) return;
+		 	score++;
+		 	this.classList.remove('up');
+		 	scoreBoard.textContent = score;
+
+		 }
+		 moles.forEach(mole => mole.addEventListener('click', bonk));
+	</script>
+</body>
+</html>
